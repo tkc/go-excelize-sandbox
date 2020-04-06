@@ -1,37 +1,33 @@
 package lamdba
 
 import (
-	"context"
-	"tkc/go-excelize-sandbox/domain/model"
-	"tkc/go-excelize-sandbox/usecase"
-
-	"tkc/go-excelize-sandbox/usecase"
+	"fmt"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
 type lamdbaInfrastructure struct {
-	excelUsecase *usecase.ExcelUsecase
+	// excelUsecase *usecase.ExcelUsecase
 }
 
 type LamdbaInfrastructure interface {
-	Serve()
+	Start()
 }
 
-func NewlamdbaInfrastructure(excelUsecase *usecase.ExcelUsecase) LamdbaInfrastructure {
+func NewlamdbaInfrastructure() LamdbaInfrastructure {
 	return &lamdbaInfrastructure{
-		excelUsecase: excelUsecase,
+		// excelUsecase: excelUsecase,
 	}
 }
 
-func (h *httpInfrastructure) Serve() {
-	lambda.Start(HandleRequest)
-}
-
-func HandleRequest(ctx context.Context, param model.ExcelParam) ([]byte, error) {
+func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	return events.APIGatewayProxyResponse{
-		Body:       []byte{},
+		Body:       fmt.Sprintf("OK"),
 		StatusCode: 200,
 	}, nil
+}
+
+func (h *lamdbaInfrastructure) Start() {
+	lambda.Start(HandleRequest)
 }
