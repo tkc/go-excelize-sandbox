@@ -18,7 +18,9 @@ var (
 )
 
 type ExcelUsecase interface {
-	CreateExcelByte(param types.ExcelParamRequestJson) ([]byte, error)
+	CreateExcelFile(param types.ExcelRequestType) (*excelize.File, error)
+	CreateExcelByte(param types.ExcelRequestType) ([]byte, error)
+	SaveExcelFile(param types.ExcelRequestType) error
 }
 
 type excelUsecase struct{}
@@ -27,12 +29,11 @@ func NewExcelUsecase() ExcelUsecase {
 	return &excelUsecase{}
 }
 
-func (excelUsecase *excelUsecase) CreateExcelByte(param types.ExcelParamRequestJson) ([]byte, error) {
+func (excelUsecase *excelUsecase) CreateExcelFile(param types.ExcelRequestType) (*excelize.File, error) {
 	rows := 8
 	pageNum := 1
 	f := excelize.NewFile()
 	maxRows := rows
-
 	for c := 0; c < len(param.JoinUser); c++ {
 		if maxRows >= 48 {
 			pageNum = pageNum + 1
@@ -137,6 +138,24 @@ func (excelUsecase *excelUsecase) CreateExcelByte(param types.ExcelParamRequestJ
 			}
 		}
 		maxRows += RowsCount
+	}
+	return f, nil
+}
+
+func (excelUsecase *excelUsecase) SaveExcelFile(param types.ExcelRequestType) error {
+	f, err := excelUsecase.CreateExcelFile(param)
+	if err != nil {
+		return nil
+	}
+	f.SaveAs("./Book1.xlsx")
+	f.DeleteSheet("temp")
+	return nil
+}
+
+func (excelUsecase *excelUsecase) CreateExcelByte(param types.ExcelRequestType) ([]byte, error) {
+	f, err := excelUsecase.CreateExcelFile(param)
+	if err != nil {
+		return nil, err
 	}
 	var b bytes.Buffer
 	if err := f.Write(&b); err != nil {

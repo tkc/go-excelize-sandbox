@@ -5,7 +5,7 @@ import (
 	"tkc/go-excelize-sandbox/src/domain/model"
 )
 
-type ExcelParamRequestJson struct {
+type ExcelRequestType struct {
 	ClientName string
 	ExcelData  map[int]map[int]map[int]*model.Excel
 	JoinUser   []*model.JoinUser

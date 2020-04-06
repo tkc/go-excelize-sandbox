@@ -1,12 +1,12 @@
-package lambda
+package param
 
 import (
 	"bytes"
 	"encoding/json"
-	"tkc/go-excelize-sandbox/domain/model"
+	"tkc/go-excelize-sandbox/src/infrastructure/types"
 )
 
-func EncodeJsonParam(param model.ExcelParam) (*string, error) {
+func EncodeJsonParam(param types.ExcelRequestType) (*string, error) {
 	jsonBytes, err := json.Marshal(param)
 	if err != nil {
 		return nil, err
@@ -17,9 +17,9 @@ func EncodeJsonParam(param model.ExcelParam) (*string, error) {
 	return &jsonStr, nil
 }
 
-func DecodeJsonParam(jsonStr string) (*model.ExcelParam, error) {
+func DecodeJsonParam(jsonStr string) (*types.ExcelRequestType, error) {
 	jsonBytes := ([]byte)(jsonStr)
-	data := new(model.ExcelParam)
+	data := new(types.ExcelRequestType)
 	if err := json.Unmarshal(jsonBytes, data); err != nil {
 		return nil, err
 	}

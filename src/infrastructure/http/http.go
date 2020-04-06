@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"time"
-	"tkc/go-excelize-sandbox/usecase"
+	"tkc/go-excelize-sandbox/src/usecase"
 )
 
 type httpInfrastructure struct {

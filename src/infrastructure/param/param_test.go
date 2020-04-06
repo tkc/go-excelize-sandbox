@@ -1,9 +1,10 @@
-package lambda
+package param
 
 import (
 	"testing"
 	"time"
-	"tkc/go-excelize-sandbox/domain/model"
+	"tkc/go-excelize-sandbox/src/domain/model"
+	"tkc/go-excelize-sandbox/src/infrastructure/types"
 
 	"github.com/bxcodec/faker/v3"
 	"github.com/stretchr/testify/assert"
@@ -26,7 +27,7 @@ func Test_encode_decode_json(t *testing.T) {
 	excelData[1][1] = make(map[int]*model.Excel)
 	excelData[1][1][1] = &excel
 
-	excelParam := model.ExcelParam{
+	excelParam := types.ExcelRequestType{
 		ClientName: faker.Name(),
 		StartJST:   fakeData,
 		ExcelData:  excelData,

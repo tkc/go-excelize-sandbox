@@ -2,22 +2,23 @@ package lamdba
 
 import (
 	"fmt"
+	"tkc/go-excelize-sandbox/src/usecase"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
 type lamdbaInfrastructure struct {
-	// excelUsecase *usecase.ExcelUsecase
+	excelUsecase *usecase.ExcelUsecase
 }
 
 type LamdbaInfrastructure interface {
 	Start()
 }
 
-func NewlamdbaInfrastructure() LamdbaInfrastructure {
+func NewlamdbaInfrastructure(excelUsecase *usecase.ExcelUsecase) LamdbaInfrastructure {
 	return &lamdbaInfrastructure{
-		// excelUsecase: excelUsecase,
+		excelUsecase: excelUsecase,
 	}
 }
 
