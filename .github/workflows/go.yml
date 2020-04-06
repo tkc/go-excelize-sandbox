@@ -23,9 +23,9 @@ jobs:
     # - name: Lint
       # run: |
         # golangci-lint run
-    - name: fmt
-      run: go fmt ./...      
-    - name: vet
+    - name: Test
+      run: go test ./...      
+    - name: Vet
       run: go vet ./...
     - name: Build
       run: go build -v .
