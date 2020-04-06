@@ -2,7 +2,6 @@ package http
 
 import (
 	"net/http"
-
 	"tkc/go-excelize-sandbox/src/usecase"
 )
 
@@ -24,7 +23,6 @@ func (h *httpInfrastructure) Serve() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// excel, err := h.excelUsecase.CreateExcelByte(r.Body)
 		// if err != nil {
-
 		// }
 		// t := time.Now().In(time.FixedZone("Asia/Tokyo", 9*60*60))
 		// downloadName := fmt.Sprintf("%d%02d%02d%02d%02d%02d", t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second())

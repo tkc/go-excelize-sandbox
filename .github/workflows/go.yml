@@ -29,3 +29,5 @@ jobs:
       run: go vet ./...
     - name: Build
       run: go build -v .
+    - name: Build Lamdba
+      run: GOOS=linux GOARCH=amd64 go build -o aws-sam-go/app ./main.go 
