@@ -5,6 +5,7 @@ deps:
 
 clean: 
 	rm -rf ./aws-sam-go/app
-	
-build:
-    GOOS=linux GOARCH=amd64 go build -o aws-sam-go/app ./main.go 
+
+serve:
+    GOOS=linux GOARCH=amd64 go build -o aws-sam-go/app ./main.go
+	sam local start-api

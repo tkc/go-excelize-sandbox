@@ -17,13 +17,11 @@ func TestHandler(t *testing.T) {
 			t.Fatal("Everything should be ok")
 		}
 		log.Print(res)
-
 	})
 
 	t.Run("Successful Request", func(t *testing.T) {
 		ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.WriteHeader(200)
-			fmt.Fprintf(w, "127.0.0.1")
+			w.WriteHeader(200)	
 		}))
 		defer ts.Close()
 		_, err := handler(events.APIGatewayProxyRequest{})

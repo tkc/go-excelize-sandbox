@@ -32,6 +32,8 @@ func NewExcelUsecase() ExcelUsecase {
 func (excelUsecase *excelUsecase) CreateExcelFile(param types.ExcelRequestType) (*excelize.File, error) {
 	rows := 8
 	pageNum := 1
+
+	// f := excelize.
 	f := excelize.NewFile()
 	maxRows := rows
 	for c := 0; c < len(param.JoinUser); c++ {
