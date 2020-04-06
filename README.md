@@ -23,7 +23,10 @@ brew install aws-sam-cli
 ## SetUp SAM
 
 ```
-& cd aws-sam-golang
 & make build
 & curl http://localhost:3000/gen
+```
+
+```
+sam local start-api
 ```

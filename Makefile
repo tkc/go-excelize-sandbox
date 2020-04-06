@@ -4,7 +4,7 @@ deps:
 	go get -u ./...
 
 clean: 
-	rm -rf ./hello-world/hello-world
+	rm -rf ./aws-sam-go/app
 	
 build:
-    GOOS=linux GOARCH=amd64 go build -o excel/excel ../main.go 
+    GOOS=linux GOARCH=amd64 go build -o aws-sam-go/app ./main.go 
