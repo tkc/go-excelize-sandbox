@@ -3,7 +3,7 @@ package http
 import (
 	"log"
 	"testing"
-	"tkc/go-excelize-sandbox/usecase"
+	"tkc/go-excelize-sandbox/src/usecase"
 )
 
 func Test_serve(t *testing.T) {
