@@ -1,7 +1,6 @@
 package lamdba
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"log"

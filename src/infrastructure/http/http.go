@@ -25,8 +25,12 @@ func NewHttpInfrastructure(excelUsecase *usecase.ExcelUsecase) HttpInfrastructur
 func (h *httpInfrastructure) Start() {
 	http.HandleFunc("/get", func(w http.ResponseWriter, r *http.Request) {
 		url := "http://localhost:8080"
-		resp, _ := http.Get(url)
+		resp, err := http.Get(url)
+		if err != nil {
+			w.Write([]byte{})
+		}
 		defer resp.Body.Close()
+
 		byteArray, _ := ioutil.ReadAll(resp.Body)
 		t := time.Now().In(time.FixedZone("Asia/Tokyo", 9*60*60))
 		downloadName := fmt.Sprintf("%d%02d%02d%02d%02d%02d.xlsx", t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second())
