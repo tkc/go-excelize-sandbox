@@ -18,9 +18,8 @@ jobs:
       run: |
         export GO111MODULE=on
         go mod download
-        go get -u github.com/kyoh86/scopelint
     - name: Install golangci-lint
-       run: |
+      run: |
         curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(go env GOPATH)/bin v1.23.    
     - name: Lint
       run: |
