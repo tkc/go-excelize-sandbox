@@ -33,8 +33,19 @@ func (excelUsecase *excelUsecase) CreateExcelFile(param types.ExcelRequestType) 
 	rows := 8
 	pageNum := 1
 
-	// f := excelize.
-	f := excelize.NewFile()
+	// Note Create new File
+	// f := excelize.NewFile()
+
+	f, err := excelize.OpenFile(fileName)
+	if err != nil {
+		return nil, err
+	}
+	index := f.NewSheet(sheetName)
+	err = f.CopySheet(1, index)
+	if err != nil {
+		return nil, err
+	}
+
 	maxRows := rows
 	for c := 0; c < len(param.JoinUser); c++ {
 		if maxRows >= 48 {

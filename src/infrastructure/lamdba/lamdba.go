@@ -17,9 +17,7 @@ type LamdbaInfrastructure interface {
 }
 
 func NewlamdbaInfrastructure(excelUsecase *usecase.ExcelUsecase) LamdbaInfrastructure {
-	return &lamdbaInfrastructure{
-		excelUsecase: excelUsecase,
-	}
+	return &lamdbaInfrastructure{excelUsecase: excelUsecase}
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
