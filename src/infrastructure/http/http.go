@@ -114,39 +114,47 @@ func (h *httpInfrastructure) Start() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
-			http.Error(w, "Error", http.StatusForbidden)
+			http.Error(w, "Error Method", http.StatusForbidden)
 		}
 		length, err := strconv.Atoi(r.Header.Get("Content-Length"))
 		if err != nil {
-			http.Error(w, "Error", http.StatusConflict)
+			log.Print(err)
+			http.Error(w, "Error Content-Length", http.StatusConflict)
 		}
 		body := make([]byte, length)
+
 		length, err = r.Body.Read(body)
 		if err != nil && err != io.EOF {
-			http.Error(w, "Error", http.StatusConflict)
+			http.Error(w, "Error Body.Read", http.StatusConflict)
 		}
 
 		var jsonBody map[string]interface{}
 		err = json.Unmarshal(body[:length], &jsonBody)
-
 		if err != nil {
-			http.Error(w, "Error", http.StatusConflict)
+			log.Print(err)
+			http.Error(w, "Error json.Unmarshal", http.StatusConflict)
 		}
 
+		log.Print(string(body))
 		excelRequestType, err := h.excelParamParser.DecodeJsonParam(string(body))
+		log.Print(excelRequestType)
+
 		if err != nil {
-			http.Error(w, "Error", http.StatusConflict)
+			log.Print(err)
+			http.Error(w, "Error DecodeJsonParam", http.StatusConflict)
 		}
 
 		data, err := h.excelUsecase.CreateExcelByte(*excelRequestType)
 		if err != nil {
-			http.Error(w, "Error", http.StatusConflict)
+			log.Print(err)
+			http.Error(w, "Error CreateExcelByte", http.StatusConflict)
 		}
 
 		w.Header().Set("Content-Description", "File Transfer")
 		w.Header().Set("Content-Transfer-Encoding", "binary")
 		w.Header().Set("Content-Type", "application/octet-stream")
 		w.Write(data)
+
 	})
 
 	log.Print("http serve start")

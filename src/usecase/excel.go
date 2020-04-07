@@ -34,15 +34,15 @@ func (excelUsecase *excelUsecase) CreateExcelFile(param types.ExcelRequestType) 
 	pageNum := 1
 
 	// Note Create new File
-	// f := excelize.NewFile()
+	f := excelize.NewFile()
 
-	f, err := excelize.OpenFile(fileName)
-	if err != nil {
-		return nil, err
-	}
+	// f, err := excelize.OpenFile(fileName)
+	// if err != nil {
+	// return nil, err
+	// }
 
 	index := f.NewSheet(sheetName)
-	err = f.CopySheet(1, index)
+	err := f.CopySheet(1, index)
 	if err != nil {
 		return nil, err
 	}
