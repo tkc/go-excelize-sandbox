@@ -8,30 +8,42 @@ import (
 
 	"github.com/bxcodec/faker/v3"
 	"github.com/stretchr/testify/assert"
-	"github.com/wawandco/fako"
 )
 
 func Test_encode_decode_json(t *testing.T) {
 
+	fakeDate := time.Now()
 	excelParamParser := NewExcelParamParser()
 
-	var excel model.Excel
-	fako.Fill(&excel)
+	dummyId := 1
+	excel := model.Excel{
+		UserID:           dummyId,
+		UserName:         faker.Name(),
+		StartedDate:      &fakeDate,
+		StartedDatetime:  &fakeDate,
+		EndedDatetime:    &fakeDate,
+		ConstructionName: faker.Sentence(),
+		Memo:             faker.Sentence(),
+		Address:          faker.Sentence(),
+		SalesUserName:    faker.Sentence(),
+	}
 
-	var joinUser model.JoinUser
-	fako.Fill(&joinUser)
+	joinUser := model.JoinUser{
+		ID:        &dummyId,
+		UserID:    &dummyId,
+		CreatedAt: &fakeDate,
+	}
 
 	JoinUsers := []*model.JoinUser{&joinUser}
 
-	fakeData := time.Now()
 	excelData := make(map[int]map[int]map[int]*model.Excel)
-	excelData[1] = make(map[int]map[int]*model.Excel)
-	excelData[1][1] = make(map[int]*model.Excel)
-	excelData[1][1][1] = &excel
+	excelData[0] = make(map[int]map[int]*model.Excel)
+	excelData[0][0] = make(map[int]*model.Excel)
+	excelData[0][0][0] = &excel
 
 	excelParam := types.ExcelRequestType{
 		ClientName: faker.Name(),
-		StartJST:   fakeData,
+		StartJST:   fakeDate,
 		ExcelData:  excelData,
 		JoinUser:   JoinUsers,
 	}
@@ -43,7 +55,17 @@ func Test_encode_decode_json(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, generatedParam.ClientName, excelParam.ClientName)
-	assert.Equal(t, generatedParam.JoinUser, excelParam.JoinUser)
-	assert.Equal(t, generatedParam.ExcelData, excelParam.ExcelData)
+	assert.Equal(t, generatedParam.JoinUser[0].ID, excelParam.JoinUser[0].ID)
+	assert.Equal(t, generatedParam.JoinUser[0].UserID, excelParam.JoinUser[0].UserID)
+	assert.Equal(t, generatedParam.JoinUser[0].CreatedAt.Format(time.UnixDate), excelParam.JoinUser[0].CreatedAt.Format(time.UnixDate))
+	assert.Equal(t, generatedParam.ExcelData[0][0][0].UserID, excelParam.ExcelData[0][0][0].UserID)
+	assert.Equal(t, generatedParam.ExcelData[0][0][0].UserName, excelParam.ExcelData[0][0][0].UserName)
+	assert.Equal(t, generatedParam.ExcelData[0][0][0].Memo, excelParam.ExcelData[0][0][0].Memo)
+	assert.Equal(t, generatedParam.ExcelData[0][0][0].Address, excelParam.ExcelData[0][0][0].Address)
+	assert.Equal(t, generatedParam.ExcelData[0][0][0].ConstructionName, excelParam.ExcelData[0][0][0].ConstructionName)
+	assert.Equal(t, generatedParam.ExcelData[0][0][0].SalesUserName, excelParam.ExcelData[0][0][0].SalesUserName)
+	assert.Equal(t, generatedParam.ExcelData[0][0][0].StartedDate.Format(time.RFC1123), excelParam.ExcelData[0][0][0].StartedDate.Format(time.RFC1123))
+	assert.Equal(t, generatedParam.ExcelData[0][0][0].StartedDatetime.Format(time.RFC1123), excelParam.ExcelData[0][0][0].StartedDatetime.Format(time.RFC1123))
+	assert.Equal(t, generatedParam.ExcelData[0][0][0].EndedDatetime.Format(time.RFC1123), excelParam.ExcelData[0][0][0].EndedDatetime.Format(time.RFC1123))
 	assert.Equal(t, generatedParam.StartJST.Format(time.UnixDate), excelParam.StartJST.Format(time.UnixDate))
 }

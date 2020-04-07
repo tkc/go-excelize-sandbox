@@ -40,6 +40,7 @@ func (excelUsecase *excelUsecase) CreateExcelFile(param types.ExcelRequestType) 
 	if err != nil {
 		return nil, err
 	}
+
 	index := f.NewSheet(sheetName)
 	err = f.CopySheet(1, index)
 	if err != nil {
