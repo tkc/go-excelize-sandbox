@@ -7,6 +7,7 @@ import (
 	"tkc/go-excelize-sandbox/src/domain/model"
 	"tkc/go-excelize-sandbox/src/infrastructure/types"
 
+	"github.com/bxcodec/faker/v3"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -18,28 +19,28 @@ func Test_create_excel_byte(t *testing.T) {
 
 	excel := model.Excel{
 		UserID:           testid,
-		UserName:         "UserName",
+		UserName:         faker.Name(),
 		StartedDate:      &testDate,
 		StartedDatetime:  &testDate,
 		EndedDatetime:    &testDate,
-		ConstructionName: "ConstructionName",
-		Memo:             "Memo",
-		Address:          "Address",
-		SalesUserName:    "SalesUserName",
+		ConstructionName: faker.Sentence(),
+		Memo:             faker.Sentence(),
+		Address:          faker.Sentence(),
+		SalesUserName:    faker.Sentence(),
 	}
 
 	excelData := make(map[int]map[int]map[int]*model.Excel)
+	// excelData[0] = make(map[int]map[int]*model.Excel)
+	// excelData[0][0] = make(map[int]*model.Excel)
+	// excelData[0][0][0] = &excel
+
 	excelData[1] = make(map[int]map[int]*model.Excel)
-	excelData[1][1] = make(map[int]*model.Excel)
-	excelData[1][1][1] = &excel
+	excelData[1][0] = make(map[int]*model.Excel)
+	excelData[1][0][1] = &excel
 
-	excelData[2] = make(map[int]map[int]*model.Excel)
-	excelData[2][1] = make(map[int]*model.Excel)
-	excelData[2][1][1] = &excel
-
-	excelData[3] = make(map[int]map[int]*model.Excel)
-	excelData[3][1] = make(map[int]*model.Excel)
-	excelData[3][1][1] = &excel
+	// excelData[2] = make(map[int]map[int]*model.Excel)
+	// excelData[2][0] = make(map[int]*model.Excel)
+	// excelData[2][0][0] = &excel
 
 	joinUser := model.JoinUser{
 		ID:        &testid,

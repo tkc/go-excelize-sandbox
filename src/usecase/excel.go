@@ -3,6 +3,7 @@ package usecase
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"strconv"
 	"time"
 	"tkc/go-excelize-sandbox/src/infrastructure/types"
@@ -30,19 +31,19 @@ func NewExcelUsecase() ExcelUsecase {
 }
 
 func (excelUsecase *excelUsecase) CreateExcelFile(param types.ExcelRequestType) (*excelize.File, error) {
+
+	log.Print(param)
+
 	rows := 8
 	pageNum := 1
+	// f := excelize.NewFile()
 
-	// Note Create new File
-	f := excelize.NewFile()
-
-	// f, err := excelize.OpenFile(fileName)
-	// if err != nil {
-	// return nil, err
-	// }
-
+	f, err := excelize.OpenFile(fileName)
+	if err != nil {
+		return nil, err
+	}
 	index := f.NewSheet(sheetName)
-	err := f.CopySheet(1, index)
+	err = f.CopySheet(1, index)
 	if err != nil {
 		return nil, err
 	}
@@ -70,6 +71,7 @@ func (excelUsecase *excelUsecase) CreateExcelFile(param types.ExcelRequestType) 
 		if err != nil {
 			return nil, err
 		}
+
 		RowsCount := 0
 		// 一人の一週間の予定を出力するループ
 		for i, dayData := range param.ExcelData[*param.JoinUser[c].UserID] {
@@ -153,6 +155,7 @@ func (excelUsecase *excelUsecase) CreateExcelFile(param types.ExcelRequestType) 
 		}
 		maxRows += RowsCount
 	}
+	f.DeleteSheet("temp")
 	return f, nil
 }
 
