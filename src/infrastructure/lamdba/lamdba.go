@@ -1,6 +1,8 @@
 package lamdba
 
 import (
+	"net/http"
+	"tkc/go-excelize-sandbox/src/infrastructure/param"
 	"tkc/go-excelize-sandbox/src/usecase"
 	"unsafe"
 
@@ -9,19 +11,41 @@ import (
 )
 
 type lamdbaInfrastructure struct {
-	excelUsecase *usecase.ExcelUsecase
+	excelUsecase     usecase.ExcelUsecase
+	excelParamParser param.ExcelParamParser
 }
 
 type LamdbaInfrastructure interface {
 	Start()
+	handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error)
 }
 
-func NewlamdbaInfrastructure(excelUsecase *usecase.ExcelUsecase) LamdbaInfrastructure {
-	return &lamdbaInfrastructure{excelUsecase: excelUsecase}
+func NewlamdbaInfrastructure(excelUsecase usecase.ExcelUsecase, excelParamParser param.ExcelParamParser) LamdbaInfrastructure {
+	return &lamdbaInfrastructure{
+		excelUsecase:     excelUsecase,
+		excelParamParser: excelParamParser,
+	}
 }
 
-func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func (h *lamdbaInfrastructure) handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	var data = []byte("はろー")
+
+	excelRequestType, err := h.excelParamParser.DecodeJsonParam(request.Body)
+
+	if err != nil {
+		return events.APIGatewayProxyResponse{
+			StatusCode: http.StatusConflict,
+		}, nil
+	}
+
+	data, err = h.excelUsecase.CreateExcelByte(*excelRequestType)
+
+	if err != nil {
+		return events.APIGatewayProxyResponse{
+			StatusCode: http.StatusConflict,
+		}, nil
+	}
+
 	return events.APIGatewayProxyResponse{
 		Headers: map[string]string{
 			"Content-Description":       "File Transfer",
@@ -32,8 +56,9 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		StatusCode:      200,
 		IsBase64Encoded: true,
 	}, nil
+
 }
 
 func (h *lamdbaInfrastructure) Start() {
-	lambda.Start(handler)
+	lambda.Start(h.handler)
 }
