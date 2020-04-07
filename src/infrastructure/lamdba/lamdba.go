@@ -1,6 +1,7 @@
 package lamdba
 
 import (
+	"log"
 	"net/http"
 	"tkc/go-excelize-sandbox/src/infrastructure/param"
 	"tkc/go-excelize-sandbox/src/usecase"
@@ -28,18 +29,21 @@ func NewlamdbaInfrastructure(excelUsecase usecase.ExcelUsecase, excelParamParser
 }
 
 func (h *lamdbaInfrastructure) handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	var data = []byte("はろー")
+
+	if request.HTTPMethod != "POST" {
+		return events.APIGatewayProxyResponse{
+			StatusCode: http.StatusForbidden,
+		}, nil
+	}
 
 	excelRequestType, err := h.excelParamParser.DecodeJsonParam(request.Body)
-
 	if err != nil {
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusConflict,
 		}, nil
 	}
 
-	data, err = h.excelUsecase.CreateExcelByte(*excelRequestType)
-
+	data, err := h.excelUsecase.CreateExcelByte(*excelRequestType)
 	if err != nil {
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusConflict,
@@ -56,9 +60,9 @@ func (h *lamdbaInfrastructure) handler(request events.APIGatewayProxyRequest) (e
 		StatusCode:      200,
 		IsBase64Encoded: true,
 	}, nil
-
 }
 
 func (h *lamdbaInfrastructure) Start() {
+	log.Print("lamdba serve start")
 	lambda.Start(h.handler)
 }

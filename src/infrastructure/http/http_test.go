@@ -3,13 +3,15 @@ package http
 import (
 	"log"
 	"testing"
+	"tkc/go-excelize-sandbox/src/infrastructure/param"
 	"tkc/go-excelize-sandbox/src/usecase"
 )
 
 func Test_serve(t *testing.T) {
 	var (
-		excelUsecase = usecase.NewExcelUsecase()
+		excelUsecase     = usecase.NewExcelUsecase()
+		excelParamParser = param.NewExcelParamParser()
 	)
-	s := NewHttpInfrastructure(&excelUsecase)
+	s := NewHttpInfrastructure(excelUsecase, excelParamParser)
 	log.Print(s)
 }

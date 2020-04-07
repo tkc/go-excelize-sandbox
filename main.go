@@ -18,7 +18,7 @@ func main() {
 		excel := lamdba.NewlamdbaInfrastructure(excelUsecase, excelParamParser)
 		excel.Start()
 	} else {
-		http := http.NewHttpInfrastructure(&excelUsecase)
+		http := http.NewHttpInfrastructure(excelUsecase, excelParamParser)
 		http.Start()
 	}
 }
