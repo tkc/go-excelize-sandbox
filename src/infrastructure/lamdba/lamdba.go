@@ -33,7 +33,7 @@ func NewlamdbaInfrastructure(
 func (h *lamdbaInfrastructure) handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	if request.HTTPMethod != "POST" {
 		return events.APIGatewayProxyResponse{
-			Body:       "Bad Method",
+			Body:       "Error Bad Method",
 			StatusCode: http.StatusForbidden,
 		}, nil
 	}
@@ -41,7 +41,7 @@ func (h *lamdbaInfrastructure) handler(request events.APIGatewayProxyRequest) (e
 	excelRequestType, err := h.excelParamParser.DecodeJSONParam(request.Body)
 	if err != nil {
 		return events.APIGatewayProxyResponse{
-			Body:       "DecodeJsonParam Error",
+			Body:       "Error DecodeJsonParam ",
 			StatusCode: http.StatusConflict,
 		}, nil
 	}
@@ -49,7 +49,7 @@ func (h *lamdbaInfrastructure) handler(request events.APIGatewayProxyRequest) (e
 	data, err := h.excelUsecase.CreateExcelByte(*excelRequestType)
 	if err != nil {
 		return events.APIGatewayProxyResponse{
-			Body:       "CreateExcelByte Error",
+			Body:       "Error CreateExcelByte",
 			StatusCode: http.StatusConflict,
 		}, nil
 	}

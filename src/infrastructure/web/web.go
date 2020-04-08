@@ -183,7 +183,7 @@ func (h *httpInfrastructure) Start() {
 
 	http.HandleFunc("/gen", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
-			http.Error(w, "Error Method", http.StatusForbidden)
+			http.Error(w, "Error Method Type", http.StatusForbidden)
 		}
 		length, err := strconv.Atoi(r.Header.Get("Content-Length"))
 		if err != nil {
@@ -191,7 +191,6 @@ func (h *httpInfrastructure) Start() {
 			http.Error(w, "Error Content-Length", http.StatusConflict)
 		}
 		body := make([]byte, length)
-
 		length, err = r.Body.Read(body)
 		if err != nil && err != io.EOF {
 			http.Error(w, "Error Body.Read", http.StatusConflict)
