@@ -29,7 +29,9 @@ func NewExcelUsecase() ExcelUsecase {
 	return &excelUsecase{}
 }
 
-func (excelUsecase *excelUsecase) CreateExcelFile(param types.ExcelRequestType) (*excelize.File, error) {
+func (excelUsecase *excelUsecase) CreateExcelFile(
+	param types.ExcelRequestType,
+) (*excelize.File, error) {
 	rows := 8
 	pageNum := 1
 
@@ -47,7 +49,7 @@ func (excelUsecase *excelUsecase) CreateExcelFile(param types.ExcelRequestType) 
 	maxRows := rows
 	for c := 0; c < len(param.JoinUser); c++ {
 		if maxRows >= 48 {
-			pageNum = pageNum + 1
+			pageNum++
 			sheetName = "Sheet" + strconv.Itoa(pageNum)
 			maxRows = rows
 			index := f.NewSheet(sheetName)
@@ -62,7 +64,8 @@ func (excelUsecase *excelUsecase) CreateExcelFile(param types.ExcelRequestType) 
 			return nil, err
 		}
 		// 更新日の設定出力日 AR2
-		t := time.Now().In(time.FixedZone("Asia/Tokyo", 9*60*60))
+		m := 60
+		t := time.Now().In(time.FixedZone("Asia/Tokyo", 9*m*m))
 		err = f.SetCellValue(sheetName, "AK2", t.Format("2006/01/02 15:04:05"))
 		if err != nil {
 			return nil, err
@@ -142,6 +145,7 @@ func (excelUsecase *excelUsecase) CreateExcelFile(param types.ExcelRequestType) 
 				RowsCount = len(dayData)
 			}
 		}
+
 		// 書き込みがあった場合のみ、セル結合
 		if len(param.ExcelData[*param.JoinUser[c].UserID]) > 0 {
 			err = f.MergeCell(sheetName, "D"+strconv.Itoa(maxRows), "D"+strconv.Itoa((maxRows+RowsCount)-1))
@@ -191,7 +195,8 @@ func TimeFormat(i *time.Time) string {
 	if i == nil {
 		return "時刻未定"
 	}
-	t := i.In(time.FixedZone("Asia/Tokyo", 9*60*60))
+	m := 60
+	t := i.In(time.FixedZone("Asia/Tokyo", 9*m*m))
 	return fmt.Sprintf("%02d:%02d", t.Hour(), t.Minute())
 }
 

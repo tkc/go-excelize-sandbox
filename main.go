@@ -3,9 +3,9 @@ package main
 import (
 	"os"
 
-	"tkc/go-excelize-sandbox/src/infrastructure/http"
 	"tkc/go-excelize-sandbox/src/infrastructure/lamdba"
 	"tkc/go-excelize-sandbox/src/infrastructure/param"
+	"tkc/go-excelize-sandbox/src/infrastructure/web"
 	"tkc/go-excelize-sandbox/src/usecase"
 )
 
@@ -18,7 +18,7 @@ func main() {
 		app := lamdba.NewlamdbaInfrastructure(excelUsecase, excelParamParser)
 		app.Start()
 	} else {
-		app := http.NewHTTPInfrastructure(excelUsecase, excelParamParser)
+		app := web.NewHTTPInfrastructure(excelUsecase, excelParamParser)
 		app.Start()
 	}
 }

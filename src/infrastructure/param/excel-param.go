@@ -23,7 +23,10 @@ func (h *excelParamParser) EncodeJSONParam(param types.ExcelRequestType) (*strin
 		return nil, err
 	}
 	out := new(bytes.Buffer)
-	json.Indent(out, jsonBytes, "", "    ")
+	err = json.Indent(out, jsonBytes, "", "    ")
+	if err != nil {
+		return nil, err
+	}
 	jsonStr := out.String()
 	return &jsonStr, nil
 }

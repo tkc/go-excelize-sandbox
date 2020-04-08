@@ -1,4 +1,4 @@
-package http
+package web
 
 import (
 	"bytes"
@@ -83,99 +83,103 @@ func CreateDummyParam() (*string, error) {
 	return json, nil
 }
 
+func test(w http.ResponseWriter, r *http.Request) {
+	url := "http://localhost:8080/gen"
+	json, err := CreateDummyParam()
+	if err != nil {
+		http.Error(w, "Error", http.StatusConflict)
+	}
+	var jsonStr = []byte(*json)
+	req, err := http.NewRequest(
+		"POST",
+		url,
+		bytes.NewBuffer(jsonStr),
+	)
+	if err != nil {
+		http.Error(w, "Error", http.StatusConflict)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	client := &http.Client{}
+
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+	byteArray, _ := ioutil.ReadAll(resp.Body)
+	decoded, _ := base64.StdEncoding.DecodeString(*(*string)(unsafe.Pointer(&byteArray)))
+	minute := 60
+	t := time.Now().In(time.FixedZone("Asia/Tokyo", 9*minute*minute))
+	downloadName := fmt.Sprintf(
+		"%d%02d%02d%02d%02d%02d.xlsx",
+		t.Year(),
+		t.Month(),
+		t.Day(),
+		t.Hour(),
+		t.Minute(),
+		t.Second(),
+	)
+
+	w.Header().Set("Content-Description", "File Transfer")
+	w.Header().Set("Content-Transfer-Encoding", "binary")
+	w.Header().Set("Content-Type", "application/octet-stream")
+	w.Header().Set("Content-Disposition", "attachment; filename="+downloadName)
+	_, err = w.Write(decoded)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func lamdbaTset(w http.ResponseWriter, r *http.Request) {
+	url := "http://localhost:8080/gen"
+	json, err := CreateDummyParam()
+	if err != nil {
+		http.Error(w, "Error", http.StatusConflict)
+	}
+	var jsonStr = []byte(*json)
+	req, err := http.NewRequest(
+		"POST",
+		url,
+		bytes.NewBuffer(jsonStr),
+	)
+	if err != nil {
+		http.Error(w, "Error", http.StatusConflict)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	client := &http.Client{}
+
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+	byteArray, _ := ioutil.ReadAll(resp.Body)
+	decoded, _ := base64.StdEncoding.DecodeString(*(*string)(unsafe.Pointer(&byteArray)))
+	minute := 60
+	t := time.Now().In(time.FixedZone("Asia/Tokyo", 9*minute*minute))
+	downloadName := fmt.Sprintf(
+		"%d%02d%02d%02d%02d%02d.xlsx",
+		t.Year(),
+		t.Month(),
+		t.Day(),
+		t.Hour(),
+		t.Minute(),
+		t.Second(),
+	)
+
+	w.Header().Set("Content-Description", "File Transfer")
+	w.Header().Set("Content-Transfer-Encoding", "binary")
+	w.Header().Set("Content-Type", "application/octet-stream")
+	w.Header().Set("Content-Disposition", "attachment; filename="+downloadName)
+	_, err = w.Write(decoded)
+	if err != nil {
+		panic(err)
+	}
+}
+
 func (h *httpInfrastructure) Start() {
-	http.HandleFunc("/test", func(w http.ResponseWriter, r *http.Request) {
-		url := "http://localhost:8080/gen"
-		json, err := CreateDummyParam()
-		if err != nil {
-			http.Error(w, "Error", http.StatusConflict)
-		}
-		var jsonStr = []byte(*json)
-		req, err := http.NewRequest(
-			"POST",
-			url,
-			bytes.NewBuffer(jsonStr),
-		)
-		if err != nil {
-			http.Error(w, "Error", http.StatusConflict)
-		}
-		req.Header.Set("Content-Type", "application/json")
-		client := &http.Client{}
-
-		resp, err := client.Do(req)
-		if err != nil {
-			panic(err)
-		}
-		defer resp.Body.Close()
-		byteArray, _ := ioutil.ReadAll(resp.Body)
-		decoded, _ := base64.StdEncoding.DecodeString(*(*string)(unsafe.Pointer(&byteArray)))
-		minute := 60
-		t := time.Now().In(time.FixedZone("Asia/Tokyo", 9*minute*minute))
-		downloadName := fmt.Sprintf(
-			"%d%02d%02d%02d%02d%02d.xlsx",
-			t.Year(),
-			t.Month(),
-			t.Day(),
-			t.Hour(),
-			t.Minute(),
-			t.Second(),
-		)
-
-		w.Header().Set("Content-Description", "File Transfer")
-		w.Header().Set("Content-Transfer-Encoding", "binary")
-		w.Header().Set("Content-Type", "application/octet-stream")
-		w.Header().Set("Content-Disposition", "attachment; filename="+downloadName)
-		_, err = w.Write(decoded)
-		if err != nil {
-			panic(err)
-		}
-	})
-
-	http.HandleFunc("/lamdba_tset", func(w http.ResponseWriter, r *http.Request) {
-		url := "http://localhost:3000/gen"
-		json, err := CreateDummyParam()
-		if err != nil {
-			http.Error(w, "Error", http.StatusConflict)
-		}
-		var jsonStr = []byte(*json)
-		req, err := http.NewRequest(
-			"POST",
-			url,
-			bytes.NewBuffer(jsonStr),
-		)
-		if err != nil {
-			http.Error(w, "Error", http.StatusConflict)
-		}
-		req.Header.Set("Content-Type", "application/json")
-		client := &http.Client{}
-
-		resp, err := client.Do(req)
-		if err != nil {
-			panic(err)
-		}
-		defer resp.Body.Close()
-
-		byteArray, _ := ioutil.ReadAll(resp.Body)
-		decoded, _ := base64.StdEncoding.DecodeString(*(*string)(unsafe.Pointer(&byteArray)))
-		t := time.Now().In(time.FixedZone("Asia/Tokyo", 9*60*60))
-		downloadName := fmt.Sprintf(
-			"%d%02d%02d%02d%02d%02d.xlsx",
-			t.Year(),
-			t.Month(),
-			t.Day(),
-			t.Hour(),
-			t.Minute(),
-			t.Second(),
-		)
-		w.Header().Set("Content-Description", "File Transfer")
-		w.Header().Set("Content-Transfer-Encoding", "binary")
-		w.Header().Set("Content-Type", "application/octet-stream")
-		w.Header().Set("Content-Disposition", "attachment; filename="+downloadName)
-		_, err = w.Write(decoded)
-		if err != nil {
-			panic(err)
-		}
-	})
+	http.HandleFunc("/test", test)
+	http.HandleFunc("/lamdba_test", lamdbaTset)
 
 	http.HandleFunc("/gen", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
@@ -208,11 +212,18 @@ func (h *httpInfrastructure) Start() {
 		if err != nil {
 			http.Error(w, "Error CreateExcelByte", http.StatusConflict)
 		}
+
 		encoded := base64.StdEncoding.EncodeToString(data)
-		fmt.Fprintf(w, encoded)
+		_, err = w.Write(*(*[]byte)(unsafe.Pointer(&encoded)))
+		if err != nil {
+			http.Error(w, "Error Write byte data", http.StatusConflict)
+		}
 	})
 
-	log.Print("http serve start")
-	http.ListenAndServe(":8080", nil)
-
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		log.Print("http serve error")
+	} else {
+		log.Print("http serve start")
+	}
 }
