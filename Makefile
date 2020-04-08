@@ -1,6 +1,7 @@
 .PHONY: deps clean build
 
 deps:
+	go mod tidy -v
 	go get -u ./...
 
 clean: 
