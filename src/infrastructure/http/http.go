@@ -138,6 +138,7 @@ func (h *httpInfrastructure) Start() {
 			panic(err)
 		}
 		defer resp.Body.Close()
+
 		byteArray, _ := ioutil.ReadAll(resp.Body)
 		decoded, _ := base64.StdEncoding.DecodeString(*(*string)(unsafe.Pointer(&byteArray)))
 		t := time.Now().In(time.FixedZone("Asia/Tokyo", 9*60*60))
@@ -183,6 +184,7 @@ func (h *httpInfrastructure) Start() {
 		encoded := base64.StdEncoding.EncodeToString(data)
 		fmt.Fprintf(w, encoded)
 	})
+
 	log.Print("http serve start")
 	http.ListenAndServe(":8080", nil)
 }

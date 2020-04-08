@@ -35,7 +35,7 @@ $ go test ./...
 
 ```
 $ go run main.go
-$ curl -d @excel.json -H "Content-Type: application/json" http://localhost:8080/test --output test_http.xlsx
+$ curl http://localhost:8080/test --output test_http.xlsx
 ```
 
 ### Serve Local Lamdba Server
@@ -44,6 +44,7 @@ $ curl -d @excel.json -H "Content-Type: application/json" http://localhost:8080/
 $ python --version         
 => Python 3.7.3
 $ make sam
+@ curl -d @excel.json -H "Content-Type: application/json" http://localhost:3000/gen
 ```
 
 ## Appendix AWS SAM

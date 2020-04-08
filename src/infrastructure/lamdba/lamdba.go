@@ -52,7 +52,6 @@ func (h *lamdbaInfrastructure) handler(request events.APIGatewayProxyRequest) (e
 	}
 
 	encoded := base64.StdEncoding.EncodeToString(data)
-
 	return events.APIGatewayProxyResponse{
 		Body:            encoded,
 		StatusCode:      200,
