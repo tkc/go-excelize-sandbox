@@ -1,0 +1,28 @@
+{
+    "ClientName": "Miss Crystal Runolfsdottir",
+    "ExcelData": {
+        "1": {
+            "0": {
+                "1": {
+                    "UserID": 1,
+                    "UserName": "Dr. Fabiola Harber",
+                    "StartedDate": "2020-04-08T12:18:29.36163+09:00",
+                    "StartedDatetime": "2020-04-08T12:18:29.36163+09:00",
+                    "EndedDatetime": "2020-04-08T12:18:29.36163+09:00",
+                    "ConstructionName": "Accusantium perferendis consequatur aut voluptatem sit.",
+                    "Memo": "Sit accusantium aut voluptatem consequatur perferendis.",
+                    "Address": "Voluptatem accusantium consequatur sit perferendis aut.",
+                    "SalesUserName": "Voluptatem consequatur aut accusantium perferendis sit."
+                }
+            }
+        }
+    },
+    "JoinUser": [
+        {
+            "ID": 1,
+            "UserID": 1,
+            "CreatedAt": "2020-04-08T12:18:29.36163+09:00"
+        }
+    ],
+    "StartJST": "2020-04-08T12:18:29.36163+09:00"
+}

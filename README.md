@@ -31,13 +31,20 @@ $ pip install aws-sam-cli
 $ go test ./...
 ```
 
-### Serve Lamdba
+### Serve Local Http Server
+
+```
+$ go run main.go
+$ curl -d @excel.json -H "Content-Type: application/json" http://localhost:8080/gen --output test_http.xlsx
+```
+
+### Serve Local Lamdba Server
 
 ```
 $ python --version         
 => Python 3.7.3
-$ make serve
-$ curl http://localhost:3000/gen
+$ make sam
+$ curl -d @excel.json -H "Content-Type: application/json" http://localhost:3000/gen --output test_lamdba.xlsx
 ```
 
 ## Appendix AWS SAM

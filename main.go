@@ -1,24 +1,24 @@
 package main
 
 import (
+	"os"
+
 	"tkc/go-excelize-sandbox/src/infrastructure/http"
 	"tkc/go-excelize-sandbox/src/infrastructure/lamdba"
 	"tkc/go-excelize-sandbox/src/infrastructure/param"
 	"tkc/go-excelize-sandbox/src/usecase"
 )
 
-var isHttp = false
-
 func main() {
 	var (
 		excelUsecase     = usecase.NewExcelUsecase()
 		excelParamParser = param.NewExcelParamParser()
 	)
-	if isHttp {
-		excel := lamdba.NewlamdbaInfrastructure(excelUsecase, excelParamParser)
-		excel.Start()
+	if len(os.Getenv("AWS_REGION")) > 0 {
+		app := lamdba.NewlamdbaInfrastructure(excelUsecase, excelParamParser)
+		app.Start()
 	} else {
-		http := http.NewHttpInfrastructure(excelUsecase, excelParamParser)
-		http.Start()
+		app := http.NewHttpInfrastructure(excelUsecase, excelParamParser)
+		app.Start()
 	}
 }

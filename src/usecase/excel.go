@@ -3,7 +3,6 @@ package usecase
 import (
 	"bytes"
 	"fmt"
-	"log"
 	"strconv"
 	"time"
 	"tkc/go-excelize-sandbox/src/infrastructure/types"
@@ -31,17 +30,15 @@ func NewExcelUsecase() ExcelUsecase {
 }
 
 func (excelUsecase *excelUsecase) CreateExcelFile(param types.ExcelRequestType) (*excelize.File, error) {
-
-	log.Print(param)
-
 	rows := 8
 	pageNum := 1
-	// f := excelize.NewFile()
+	f := excelize.NewFile()
 
 	f, err := excelize.OpenFile(fileName)
 	if err != nil {
 		return nil, err
 	}
+
 	index := f.NewSheet(sheetName)
 	err = f.CopySheet(1, index)
 	if err != nil {

@@ -1,11 +1,10 @@
 package lamdba
 
 import (
-	"log"
+	"encoding/base64"
 	"net/http"
 	"tkc/go-excelize-sandbox/src/infrastructure/param"
 	"tkc/go-excelize-sandbox/src/usecase"
-	"unsafe"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -29,9 +28,9 @@ func NewlamdbaInfrastructure(excelUsecase usecase.ExcelUsecase, excelParamParser
 }
 
 func (h *lamdbaInfrastructure) handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-
 	if request.HTTPMethod != "POST" {
 		return events.APIGatewayProxyResponse{
+			Body:       "Bad Method",
 			StatusCode: http.StatusForbidden,
 		}, nil
 	}
@@ -39,6 +38,7 @@ func (h *lamdbaInfrastructure) handler(request events.APIGatewayProxyRequest) (e
 	excelRequestType, err := h.excelParamParser.DecodeJsonParam(request.Body)
 	if err != nil {
 		return events.APIGatewayProxyResponse{
+			Body:       "DecodeJsonParam Error",
 			StatusCode: http.StatusConflict,
 		}, nil
 	}
@@ -46,23 +46,20 @@ func (h *lamdbaInfrastructure) handler(request events.APIGatewayProxyRequest) (e
 	data, err := h.excelUsecase.CreateExcelByte(*excelRequestType)
 	if err != nil {
 		return events.APIGatewayProxyResponse{
+			Body:       "CreateExcelByte Error",
 			StatusCode: http.StatusConflict,
 		}, nil
 	}
 
+	encoded := base64.StdEncoding.EncodeToString(data)
+
 	return events.APIGatewayProxyResponse{
-		Headers: map[string]string{
-			"Content-Description":       "File Transfer",
-			"Content-Transfer-Encoding": "binary",
-			"Content-Type":              "application/octet-stream",
-		},
-		Body:            *(*string)(unsafe.Pointer(&data)),
+		Body:            encoded,
 		StatusCode:      200,
-		IsBase64Encoded: true,
+		IsBase64Encoded: false,
 	}, nil
 }
 
 func (h *lamdbaInfrastructure) Start() {
-	log.Print("lamdba serve start")
 	lambda.Start(h.handler)
 }

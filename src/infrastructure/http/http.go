@@ -2,6 +2,7 @@ package http
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -14,6 +15,7 @@ import (
 	"tkc/go-excelize-sandbox/src/infrastructure/param"
 	"tkc/go-excelize-sandbox/src/infrastructure/types"
 	"tkc/go-excelize-sandbox/src/usecase"
+	"unsafe"
 
 	"github.com/bxcodec/faker/v3"
 )
@@ -37,6 +39,7 @@ func NewHttpInfrastructure(excelUsecase usecase.ExcelUsecase, excelParamParser p
 func CreateDummyParam() (*string, error) {
 	fakeDate := time.Now()
 	excelParamParser := param.NewExcelParamParser()
+
 	dummyId := 1
 	excel := model.Excel{
 		UserID:           dummyId,
@@ -58,9 +61,9 @@ func CreateDummyParam() (*string, error) {
 
 	JoinUsers := []*model.JoinUser{&joinUser}
 	excelData := make(map[int]map[int]map[int]*model.Excel)
-	excelData[0] = make(map[int]map[int]*model.Excel)
-	excelData[0][0] = make(map[int]*model.Excel)
-	excelData[0][0][0] = &excel
+	excelData[1] = make(map[int]map[int]*model.Excel)
+	excelData[1][0] = make(map[int]*model.Excel)
+	excelData[1][0][1] = &excel
 
 	excelParam := types.ExcelRequestType{
 		ClientName: faker.Name(),
@@ -78,8 +81,8 @@ func CreateDummyParam() (*string, error) {
 }
 
 func (h *httpInfrastructure) Start() {
-	http.HandleFunc("/get", func(w http.ResponseWriter, r *http.Request) {
-		url := "http://localhost:8080"
+	http.HandleFunc("/test", func(w http.ResponseWriter, r *http.Request) {
+		url := "http://localhost:8080/gen"
 		json, err := CreateDummyParam()
 		if err != nil {
 			http.Error(w, "Error", http.StatusConflict)
@@ -101,18 +104,52 @@ func (h *httpInfrastructure) Start() {
 			panic(err)
 		}
 		defer resp.Body.Close()
-
 		byteArray, _ := ioutil.ReadAll(resp.Body)
+		decoded, _ := base64.StdEncoding.DecodeString(*(*string)(unsafe.Pointer(&byteArray)))
 		t := time.Now().In(time.FixedZone("Asia/Tokyo", 9*60*60))
 		downloadName := fmt.Sprintf("%d%02d%02d%02d%02d%02d.xlsx", t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second())
 		w.Header().Set("Content-Description", "File Transfer")
 		w.Header().Set("Content-Transfer-Encoding", "binary")
 		w.Header().Set("Content-Type", "application/octet-stream")
 		w.Header().Set("Content-Disposition", "attachment; filename="+downloadName)
-		w.Write(byteArray)
+		w.Write(decoded)
 	})
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/lamdba_tset", func(w http.ResponseWriter, r *http.Request) {
+		url := "http://localhost:3000/gen"
+		json, err := CreateDummyParam()
+		if err != nil {
+			http.Error(w, "Error", http.StatusConflict)
+		}
+		var jsonStr = []byte(*json)
+		req, err := http.NewRequest(
+			"POST",
+			url,
+			bytes.NewBuffer(jsonStr),
+		)
+		if err != nil {
+			http.Error(w, "Error", http.StatusConflict)
+		}
+		req.Header.Set("Content-Type", "application/json")
+		client := &http.Client{}
+
+		resp, err := client.Do(req)
+		if err != nil {
+			panic(err)
+		}
+		defer resp.Body.Close()
+		byteArray, _ := ioutil.ReadAll(resp.Body)
+		decoded, _ := base64.StdEncoding.DecodeString(*(*string)(unsafe.Pointer(&byteArray)))
+		t := time.Now().In(time.FixedZone("Asia/Tokyo", 9*60*60))
+		downloadName := fmt.Sprintf("%d%02d%02d%02d%02d%02d.xlsx", t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second())
+		w.Header().Set("Content-Description", "File Transfer")
+		w.Header().Set("Content-Transfer-Encoding", "binary")
+		w.Header().Set("Content-Type", "application/octet-stream")
+		w.Header().Set("Content-Disposition", "attachment; filename="+downloadName)
+		w.Write(decoded)
+	})
+
+	http.HandleFunc("/gen", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
 			http.Error(w, "Error Method", http.StatusForbidden)
 		}
@@ -131,30 +168,20 @@ func (h *httpInfrastructure) Start() {
 		var jsonBody map[string]interface{}
 		err = json.Unmarshal(body[:length], &jsonBody)
 		if err != nil {
-			log.Print(err)
 			http.Error(w, "Error json.Unmarshal", http.StatusConflict)
 		}
 
-		log.Print(string(body))
 		excelRequestType, err := h.excelParamParser.DecodeJsonParam(string(body))
-		log.Print(excelRequestType)
-
 		if err != nil {
-			log.Print(err)
 			http.Error(w, "Error DecodeJsonParam", http.StatusConflict)
 		}
 
 		data, err := h.excelUsecase.CreateExcelByte(*excelRequestType)
 		if err != nil {
-			log.Print(err)
 			http.Error(w, "Error CreateExcelByte", http.StatusConflict)
 		}
-
-		w.Header().Set("Content-Description", "File Transfer")
-		w.Header().Set("Content-Transfer-Encoding", "binary")
-		w.Header().Set("Content-Type", "application/octet-stream")
-		w.Write(data)
-
+		encoded := base64.StdEncoding.EncodeToString(data)
+		fmt.Fprintf(w, encoded)
 	})
 
 	log.Print("http serve start")

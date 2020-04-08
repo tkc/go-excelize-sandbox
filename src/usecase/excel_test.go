@@ -30,17 +30,9 @@ func Test_create_excel_byte(t *testing.T) {
 	}
 
 	excelData := make(map[int]map[int]map[int]*model.Excel)
-	// excelData[0] = make(map[int]map[int]*model.Excel)
-	// excelData[0][0] = make(map[int]*model.Excel)
-	// excelData[0][0][0] = &excel
-
 	excelData[1] = make(map[int]map[int]*model.Excel)
 	excelData[1][0] = make(map[int]*model.Excel)
 	excelData[1][0][1] = &excel
-
-	// excelData[2] = make(map[int]map[int]*model.Excel)
-	// excelData[2][0] = make(map[int]*model.Excel)
-	// excelData[2][0][0] = &excel
 
 	joinUser := model.JoinUser{
 		ID:        &testid,
@@ -61,6 +53,7 @@ func Test_create_excel_byte(t *testing.T) {
 		JoinUser:   JoinUsers,
 		ClientName: clientName,
 	}
+
 	_, err := p.CreateExcelByte(excelParam)
 	log.Print(err)
 	assert.NoError(t, err)
