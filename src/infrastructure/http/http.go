@@ -183,7 +183,6 @@ func (h *httpInfrastructure) Start() {
 		encoded := base64.StdEncoding.EncodeToString(data)
 		fmt.Fprintf(w, encoded)
 	})
-
 	log.Print("http serve start")
 	http.ListenAndServe(":8080", nil)
 }

@@ -8,4 +8,5 @@ clean:
 
 sam:
 	GOOS=linux GOARCH=amd64 go build -o sam-go/app ./main.go
+	cp format.xlsx sam-go/format.xlsx
 	sam local start-api

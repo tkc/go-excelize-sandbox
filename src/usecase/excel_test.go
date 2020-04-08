@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"log"
 	"testing"
 	"time"
 	"tkc/go-excelize-sandbox/src/domain/model"
@@ -55,10 +54,8 @@ func Test_create_excel_byte(t *testing.T) {
 	}
 
 	_, err := p.CreateExcelByte(excelParam)
-	log.Print(err)
 	assert.NoError(t, err)
 
 	err = p.SaveExcelFile(excelParam)
-	log.Print(err)
 	assert.NoError(t, err)
 }
