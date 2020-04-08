@@ -131,7 +131,7 @@ func test(w http.ResponseWriter, r *http.Request) {
 }
 
 func lamdbaTset(w http.ResponseWriter, r *http.Request) {
-	url := "http://localhost:8080/gen"
+	url := "http://localhost:3000/gen"
 	json, err := CreateDummyParam()
 	if err != nil {
 		http.Error(w, "Error", http.StatusConflict)
