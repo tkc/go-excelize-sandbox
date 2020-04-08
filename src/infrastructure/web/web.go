@@ -25,14 +25,14 @@ type httpInfrastructure struct {
 	excelParamParser param.ExcelParamParser
 }
 
-type HTTPInfrastructure interface {
+type Infrastructure interface {
 	Start()
 }
 
 func NewHTTPInfrastructure(
 	excelUsecase usecase.ExcelUsecase,
 	excelParamParser param.ExcelParamParser,
-) HTTPInfrastructure {
+) Infrastructure {
 	return &httpInfrastructure{
 		excelUsecase:     excelUsecase,
 		excelParamParser: excelParamParser,

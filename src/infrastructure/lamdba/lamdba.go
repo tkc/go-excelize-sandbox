@@ -15,7 +15,7 @@ type lamdbaInfrastructure struct {
 	excelParamParser param.ExcelParamParser
 }
 
-type LamdbaInfrastructure interface {
+type Infrastructure interface {
 	Start()
 	handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error)
 }
@@ -23,7 +23,7 @@ type LamdbaInfrastructure interface {
 func NewlamdbaInfrastructure(
 	excelUsecase usecase.ExcelUsecase,
 	excelParamParser param.ExcelParamParser,
-) LamdbaInfrastructure {
+) Infrastructure {
 	return &lamdbaInfrastructure{
 		excelUsecase:     excelUsecase,
 		excelParamParser: excelParamParser,
