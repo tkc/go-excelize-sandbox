@@ -25,11 +25,14 @@ type httpInfrastructure struct {
 	excelParamParser param.ExcelParamParser
 }
 
-type HttpInfrastructure interface {
+type HTTPInfrastructure interface {
 	Start()
 }
 
-func NewHttpInfrastructure(excelUsecase usecase.ExcelUsecase, excelParamParser param.ExcelParamParser) HttpInfrastructure {
+func NewHTTPInfrastructure(
+	excelUsecase usecase.ExcelUsecase,
+	excelParamParser param.ExcelParamParser,
+) HTTPInfrastructure {
 	return &httpInfrastructure{
 		excelUsecase:     excelUsecase,
 		excelParamParser: excelParamParser,
@@ -40,9 +43,9 @@ func CreateDummyParam() (*string, error) {
 	fakeDate := time.Now()
 	excelParamParser := param.NewExcelParamParser()
 
-	dummyId := 1
+	dummyID := 1
 	excel := model.Excel{
-		UserID:           dummyId,
+		UserID:           dummyID,
 		UserName:         faker.Name(),
 		StartedDate:      &fakeDate,
 		StartedDatetime:  &fakeDate,
@@ -54,8 +57,8 @@ func CreateDummyParam() (*string, error) {
 	}
 
 	joinUser := model.JoinUser{
-		ID:        &dummyId,
-		UserID:    &dummyId,
+		ID:        &dummyID,
+		UserID:    &dummyID,
 		CreatedAt: &fakeDate,
 	}
 
@@ -72,7 +75,7 @@ func CreateDummyParam() (*string, error) {
 		JoinUser:   JoinUsers,
 	}
 
-	json, err := excelParamParser.EncodeJsonParam(excelParam)
+	json, err := excelParamParser.EncodeJSONParam(excelParam)
 	if err != nil {
 		errStr := ""
 		return &errStr, err
@@ -106,13 +109,26 @@ func (h *httpInfrastructure) Start() {
 		defer resp.Body.Close()
 		byteArray, _ := ioutil.ReadAll(resp.Body)
 		decoded, _ := base64.StdEncoding.DecodeString(*(*string)(unsafe.Pointer(&byteArray)))
-		t := time.Now().In(time.FixedZone("Asia/Tokyo", 9*60*60))
-		downloadName := fmt.Sprintf("%d%02d%02d%02d%02d%02d.xlsx", t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second())
+		minute := 60
+		t := time.Now().In(time.FixedZone("Asia/Tokyo", 9*minute*minute))
+		downloadName := fmt.Sprintf(
+			"%d%02d%02d%02d%02d%02d.xlsx",
+			t.Year(),
+			t.Month(),
+			t.Day(),
+			t.Hour(),
+			t.Minute(),
+			t.Second(),
+		)
+
 		w.Header().Set("Content-Description", "File Transfer")
 		w.Header().Set("Content-Transfer-Encoding", "binary")
 		w.Header().Set("Content-Type", "application/octet-stream")
 		w.Header().Set("Content-Disposition", "attachment; filename="+downloadName)
-		w.Write(decoded)
+		_, err = w.Write(decoded)
+		if err != nil {
+			panic(err)
+		}
 	})
 
 	http.HandleFunc("/lamdba_tset", func(w http.ResponseWriter, r *http.Request) {
@@ -142,12 +158,23 @@ func (h *httpInfrastructure) Start() {
 		byteArray, _ := ioutil.ReadAll(resp.Body)
 		decoded, _ := base64.StdEncoding.DecodeString(*(*string)(unsafe.Pointer(&byteArray)))
 		t := time.Now().In(time.FixedZone("Asia/Tokyo", 9*60*60))
-		downloadName := fmt.Sprintf("%d%02d%02d%02d%02d%02d.xlsx", t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second())
+		downloadName := fmt.Sprintf(
+			"%d%02d%02d%02d%02d%02d.xlsx",
+			t.Year(),
+			t.Month(),
+			t.Day(),
+			t.Hour(),
+			t.Minute(),
+			t.Second(),
+		)
 		w.Header().Set("Content-Description", "File Transfer")
 		w.Header().Set("Content-Transfer-Encoding", "binary")
 		w.Header().Set("Content-Type", "application/octet-stream")
 		w.Header().Set("Content-Disposition", "attachment; filename="+downloadName)
-		w.Write(decoded)
+		_, err = w.Write(decoded)
+		if err != nil {
+			panic(err)
+		}
 	})
 
 	http.HandleFunc("/gen", func(w http.ResponseWriter, r *http.Request) {
@@ -172,7 +199,7 @@ func (h *httpInfrastructure) Start() {
 			http.Error(w, "Error json.Unmarshal", http.StatusConflict)
 		}
 
-		excelRequestType, err := h.excelParamParser.DecodeJsonParam(string(body))
+		excelRequestType, err := h.excelParamParser.DecodeJSONParam(string(body))
 		if err != nil {
 			http.Error(w, "Error DecodeJsonParam", http.StatusConflict)
 		}
@@ -187,4 +214,5 @@ func (h *httpInfrastructure) Start() {
 
 	log.Print("http serve start")
 	http.ListenAndServe(":8080", nil)
+
 }

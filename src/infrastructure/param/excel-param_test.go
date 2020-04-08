@@ -11,13 +11,12 @@ import (
 )
 
 func Test_encode_decode_json(t *testing.T) {
-
 	fakeDate := time.Now()
 	excelParamParser := NewExcelParamParser()
 
-	dummyId := 1
+	dummyID := 1
 	excel := model.Excel{
-		UserID:           dummyId,
+		UserID:           dummyID,
 		UserName:         faker.Name(),
 		StartedDate:      &fakeDate,
 		StartedDatetime:  &fakeDate,
@@ -29,8 +28,8 @@ func Test_encode_decode_json(t *testing.T) {
 	}
 
 	joinUser := model.JoinUser{
-		ID:        &dummyId,
-		UserID:    &dummyId,
+		ID:        &dummyID,
+		UserID:    &dummyID,
 		CreatedAt: &fakeDate,
 	}
 
@@ -48,10 +47,10 @@ func Test_encode_decode_json(t *testing.T) {
 		JoinUser:   JoinUsers,
 	}
 
-	json, err := excelParamParser.EncodeJsonParam(excelParam)
+	json, err := excelParamParser.EncodeJSONParam(excelParam)
 	assert.NoError(t, err)
 
-	generatedParam, err := excelParamParser.DecodeJsonParam(*json)
+	generatedParam, err := excelParamParser.DecodeJSONParam(*json)
 	assert.NoError(t, err)
 
 	assert.Equal(t, generatedParam.ClientName, excelParam.ClientName)

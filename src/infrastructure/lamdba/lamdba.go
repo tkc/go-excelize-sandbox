@@ -20,7 +20,10 @@ type LamdbaInfrastructure interface {
 	handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error)
 }
 
-func NewlamdbaInfrastructure(excelUsecase usecase.ExcelUsecase, excelParamParser param.ExcelParamParser) LamdbaInfrastructure {
+func NewlamdbaInfrastructure(
+	excelUsecase usecase.ExcelUsecase,
+	excelParamParser param.ExcelParamParser,
+) LamdbaInfrastructure {
 	return &lamdbaInfrastructure{
 		excelUsecase:     excelUsecase,
 		excelParamParser: excelParamParser,
@@ -35,7 +38,7 @@ func (h *lamdbaInfrastructure) handler(request events.APIGatewayProxyRequest) (e
 		}, nil
 	}
 
-	excelRequestType, err := h.excelParamParser.DecodeJsonParam(request.Body)
+	excelRequestType, err := h.excelParamParser.DecodeJSONParam(request.Body)
 	if err != nil {
 		return events.APIGatewayProxyResponse{
 			Body:       "DecodeJsonParam Error",
@@ -54,7 +57,7 @@ func (h *lamdbaInfrastructure) handler(request events.APIGatewayProxyRequest) (e
 	encoded := base64.StdEncoding.EncodeToString(data)
 	return events.APIGatewayProxyResponse{
 		Body:            encoded,
-		StatusCode:      200,
+		StatusCode:      http.StatusOK,
 		IsBase64Encoded: false,
 	}, nil
 }

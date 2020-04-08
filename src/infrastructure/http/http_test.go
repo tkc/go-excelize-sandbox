@@ -12,6 +12,6 @@ func Test_serve(t *testing.T) {
 		excelUsecase     = usecase.NewExcelUsecase()
 		excelParamParser = param.NewExcelParamParser()
 	)
-	s := NewHttpInfrastructure(excelUsecase, excelParamParser)
+	s := NewHTTPInfrastructure(excelUsecase, excelParamParser)
 	log.Print(s)
 }

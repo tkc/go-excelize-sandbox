@@ -11,7 +11,6 @@ import (
 )
 
 func TestHandler(t *testing.T) {
-
 	var (
 		excelUsecase     = usecase.NewExcelUsecase()
 		excelParamParser = param.NewExcelParamParser()
@@ -21,7 +20,7 @@ func TestHandler(t *testing.T) {
 
 	t.Run("Successful Request", func(t *testing.T) {
 		ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.WriteHeader(200)
+			w.WriteHeader(http.StatusOK)
 		}))
 		defer ts.Close()
 		_, err := excelLamdba.handler(events.APIGatewayProxyRequest{})

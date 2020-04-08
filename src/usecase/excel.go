@@ -32,7 +32,6 @@ func NewExcelUsecase() ExcelUsecase {
 func (excelUsecase *excelUsecase) CreateExcelFile(param types.ExcelRequestType) (*excelize.File, error) {
 	rows := 8
 	pageNum := 1
-	f := excelize.NewFile()
 
 	f, err := excelize.OpenFile(fileName)
 	if err != nil {
@@ -113,31 +112,31 @@ func (excelUsecase *excelUsecase) CreateExcelFile(param types.ExcelRequestType) 
 				if err != nil {
 					return nil, err
 				}
-				columnNum += 1
+				columnNum++
 				//時間終了
 				err = f.SetCellValue(sheetName, ColumnNumberToName(columnNum, row), TimeFormat(dayData[d].EndedDatetime))
 				if err != nil {
 					return nil, err
 				}
-				columnNum += 1
+				columnNum++
 				//現場名
 				err = f.SetCellValue(sheetName, ColumnNumberToName(columnNum, row), ConstructionName(dayData[d].ConstructionName))
 				if err != nil {
 					return nil, err
 				}
-				columnNum += 1
+				columnNum++
 				//工事内容
 				err = f.SetCellValue(sheetName, ColumnNumberToName(columnNum, row), dayData[d].Memo)
 				if err != nil {
 					return nil, err
 				}
-				columnNum += 1
+				columnNum++
 				//住所
 				err = f.SetCellValue(sheetName, ColumnNumberToName(columnNum, row), dayData[d].Address)
 				if err != nil {
 					return nil, err
 				}
-				row += 1
+				row++
 			}
 			if RowsCount < len(dayData) {
 				RowsCount = len(dayData)
@@ -159,9 +158,12 @@ func (excelUsecase *excelUsecase) CreateExcelFile(param types.ExcelRequestType) 
 func (excelUsecase *excelUsecase) SaveExcelFile(param types.ExcelRequestType) error {
 	f, err := excelUsecase.CreateExcelFile(param)
 	if err != nil {
-		return nil
+		return err
 	}
-	f.SaveAs("./Book1.xlsx")
+	err = f.SaveAs("./Book1.xlsx")
+	if err != nil {
+		return err
+	}
 	f.DeleteSheet("temp")
 	return nil
 }

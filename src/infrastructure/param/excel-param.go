@@ -9,15 +9,15 @@ import (
 type excelParamParser struct{}
 
 type ExcelParamParser interface {
-	EncodeJsonParam(param types.ExcelRequestType) (*string, error)
-	DecodeJsonParam(jsonStr string) (*types.ExcelRequestType, error)
+	EncodeJSONParam(param types.ExcelRequestType) (*string, error)
+	DecodeJSONParam(jsonStr string) (*types.ExcelRequestType, error)
 }
 
 func NewExcelParamParser() ExcelParamParser {
 	return &excelParamParser{}
 }
 
-func (h *excelParamParser) EncodeJsonParam(param types.ExcelRequestType) (*string, error) {
+func (h *excelParamParser) EncodeJSONParam(param types.ExcelRequestType) (*string, error) {
 	jsonBytes, err := json.Marshal(param)
 	if err != nil {
 		return nil, err
@@ -28,7 +28,7 @@ func (h *excelParamParser) EncodeJsonParam(param types.ExcelRequestType) (*strin
 	return &jsonStr, nil
 }
 
-func (h *excelParamParser) DecodeJsonParam(jsonStr string) (*types.ExcelRequestType, error) {
+func (h *excelParamParser) DecodeJSONParam(jsonStr string) (*types.ExcelRequestType, error) {
 	jsonBytes := ([]byte)(jsonStr)
 	data := new(types.ExcelRequestType)
 	if err := json.Unmarshal(jsonBytes, data); err != nil {
