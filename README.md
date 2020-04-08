@@ -11,7 +11,7 @@ $ python3 -m venv penv
 $ source penv/bin/activate 
 ```
 
-### Go 1.3.x
+### Go ^1.3.x
 
 ```
 % go version  
