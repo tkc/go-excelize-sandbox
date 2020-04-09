@@ -40,7 +40,7 @@ func Test_create_excel_byte(t *testing.T) {
 
 	var (
 		startJST   = time.Now()
-		clientName = "clientName"
+		clientName = faker.Name()
 	)
 
 	JoinUsers := []*model.JoinUser{&joinUser, &joinUser, &joinUser, &joinUser, &joinUser}

@@ -3,6 +3,7 @@ package lamdba
 import (
 	"encoding/base64"
 	"net/http"
+	"tkc/go-excelize-sandbox/src/infrastructure/logger"
 	"tkc/go-excelize-sandbox/src/infrastructure/param"
 	"tkc/go-excelize-sandbox/src/usecase"
 
@@ -13,6 +14,7 @@ import (
 type lamdbaInfrastructure struct {
 	excelUsecase     usecase.ExcelUsecase
 	excelParamParser param.ExcelParamParser
+	LamdbaLogger     logger.LamdbaLogger
 }
 
 type Infrastructure interface {
@@ -23,10 +25,12 @@ type Infrastructure interface {
 func NewlamdbaInfrastructure(
 	excelUsecase usecase.ExcelUsecase,
 	excelParamParser param.ExcelParamParser,
+	LamdbaLogger logger.LamdbaLogger,
 ) Infrastructure {
 	return &lamdbaInfrastructure{
 		excelUsecase:     excelUsecase,
 		excelParamParser: excelParamParser,
+		LamdbaLogger:     LamdbaLogger,
 	}
 }
 
@@ -40,6 +44,7 @@ func (h *lamdbaInfrastructure) handler(request events.APIGatewayProxyRequest) (e
 
 	excelRequestType, err := h.excelParamParser.DecodeJSONParam(request.Body)
 	if err != nil {
+		h.LamdbaLogger.Capture(request, err)
 		return events.APIGatewayProxyResponse{
 			Body:       "Error DecodeJsonParam ",
 			StatusCode: http.StatusConflict,
@@ -48,6 +53,7 @@ func (h *lamdbaInfrastructure) handler(request events.APIGatewayProxyRequest) (e
 
 	data, err := h.excelUsecase.CreateExcelByte(*excelRequestType)
 	if err != nil {
+		h.LamdbaLogger.Capture(request, err)
 		return events.APIGatewayProxyResponse{
 			Body:       "Error CreateExcelByte",
 			StatusCode: http.StatusConflict,

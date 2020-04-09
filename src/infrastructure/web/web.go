@@ -185,31 +185,33 @@ func (h *httpInfrastructure) Start() {
 		if r.Method != "POST" {
 			http.Error(w, "Error Method Type", http.StatusForbidden)
 		}
+
 		length, err := strconv.Atoi(r.Header.Get("Content-Length"))
 		if err != nil {
 			log.Print(err)
 			http.Error(w, "Error Content-Length", http.StatusConflict)
 		}
+
 		body := make([]byte, length)
 		length, err = r.Body.Read(body)
 		if err != nil && err != io.EOF {
-			http.Error(w, "Error Body.Read", http.StatusConflict)
+			http.Error(w, "Error Body read", http.StatusConflict)
 		}
 
 		var jsonBody map[string]interface{}
 		err = json.Unmarshal(body[:length], &jsonBody)
 		if err != nil {
-			http.Error(w, "Error json.Unmarshal", http.StatusConflict)
+			http.Error(w, "Error json Unmarshal", http.StatusConflict)
 		}
 
 		excelRequestType, err := h.excelParamParser.DecodeJSONParam(string(body))
 		if err != nil {
-			http.Error(w, "Error DecodeJsonParam", http.StatusConflict)
+			http.Error(w, "Error Decode JSOM param", http.StatusConflict)
 		}
 
 		data, err := h.excelUsecase.CreateExcelByte(*excelRequestType)
 		if err != nil {
-			http.Error(w, "Error CreateExcelByte", http.StatusConflict)
+			http.Error(w, "Error Create excel byte", http.StatusConflict)
 		}
 
 		encoded := base64.StdEncoding.EncodeToString(data)
@@ -219,8 +221,7 @@ func (h *httpInfrastructure) Start() {
 		}
 	})
 
-	err := http.ListenAndServe(":8080", nil)
-	if err != nil {
+	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Print("http serve error")
 	} else {
 		log.Print("http serve start")
