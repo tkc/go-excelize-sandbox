@@ -14,8 +14,8 @@ Resources:
   HelloWorldFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: sam-go/
-      Handler: app
+      CodeUri: excelize/
+      Handler: excelize
       Runtime: go1.x
       Tracing: Active # https://docs.aws.amazon.com/lambda/latest/dg/lambda-x-ray.html
       Events:
@@ -26,7 +26,7 @@ Resources:
             Method: POST
       Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
         Variables:
-          SENTY_DNS: https://4b419002d618462cb5e299985d604005@o285930.ingest.sentry.io/5175387
+          SENTY_DNS: https://4b419002d618462cb5e299985d604005@o285930.ingest.sentry.io/5175387 # https://sentry.io/organizations/oct/issues/?project=5175387
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function

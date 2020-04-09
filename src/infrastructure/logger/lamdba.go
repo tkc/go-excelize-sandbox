@@ -35,7 +35,6 @@ func (h *lamdbaLogger) Capture(
 	log.Printf("EVENT: %s", eventJSON)
 	log.Printf("Error: %s", err.Error())
 	log.Printf("REGION: %s", os.Getenv("AWS_REGION"))
-
 	log.Println("ALL ENV VARS:")
 	for _, element := range os.Environ() {
 		log.Println(element)
