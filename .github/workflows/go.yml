@@ -21,6 +21,7 @@ jobs:
     - name: Get dependencies
       run: |
         export GO111MODULE=on
+        cd single-construction-excelize
         go mod download
     - name: Install golangci-lint
       run: |
