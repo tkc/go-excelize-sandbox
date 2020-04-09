@@ -18,8 +18,8 @@ type LamdbaLogger interface {
 func NewLamdbaLogger(sentryDsn string) (LamdbaLogger, error) {
 	err := sentry.Init(sentry.ClientOptions{Dsn: sentryDsn})
 	if err != nil {
-		log.Printf("Sentry Initialize Error: %s", err.Error)
-		return lamdbaLogger{}, err
+		log.Printf("Sentry Initialize Error: %s", err.Error())
+		return &lamdbaLogger{}, err
 	}
 	return &lamdbaLogger{}, nil
 }
@@ -31,8 +31,8 @@ func (h *lamdbaLogger) Capture(
 	// Sentry
 	sentry.CaptureException(err)
 	// CloudWatch
-	eventJson, _ := json.MarshalIndent(event, "", "  ")
-	log.Printf("EVENT: %s", eventJson)
+	eventJSON, _ := json.MarshalIndent(event, "", "  ")
+	log.Printf("EVENT: %s", eventJSON)
 	log.Printf("Error: %s", err.Error())
 	log.Printf("REGION: %s", os.Getenv("AWS_REGION"))
 

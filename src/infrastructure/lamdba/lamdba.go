@@ -14,7 +14,7 @@ import (
 type lamdbaInfrastructure struct {
 	excelUsecase     usecase.ExcelUsecase
 	excelParamParser param.ExcelParamParser
-	LamdbaLogger     logger.LamdbaLogger
+	lamdbaLogger     logger.LamdbaLogger
 }
 
 type Infrastructure interface {
@@ -25,12 +25,12 @@ type Infrastructure interface {
 func NewlamdbaInfrastructure(
 	excelUsecase usecase.ExcelUsecase,
 	excelParamParser param.ExcelParamParser,
-	LamdbaLogger logger.LamdbaLogger,
+	lamdbaLogger logger.LamdbaLogger,
 ) Infrastructure {
 	return &lamdbaInfrastructure{
 		excelUsecase:     excelUsecase,
 		excelParamParser: excelParamParser,
-		LamdbaLogger:     LamdbaLogger,
+		lamdbaLogger:     lamdbaLogger,
 	}
 }
 
@@ -44,7 +44,7 @@ func (h *lamdbaInfrastructure) handler(request events.APIGatewayProxyRequest) (e
 
 	excelRequestType, err := h.excelParamParser.DecodeJSONParam(request.Body)
 	if err != nil {
-		h.LamdbaLogger.Capture(request, err)
+		h.lamdbaLogger.Capture(request, err)
 		return events.APIGatewayProxyResponse{
 			Body:       "Error DecodeJsonParam ",
 			StatusCode: http.StatusConflict,
@@ -53,7 +53,7 @@ func (h *lamdbaInfrastructure) handler(request events.APIGatewayProxyRequest) (e
 
 	data, err := h.excelUsecase.CreateExcelByte(*excelRequestType)
 	if err != nil {
-		h.LamdbaLogger.Capture(request, err)
+		h.lamdbaLogger.Capture(request, err)
 		return events.APIGatewayProxyResponse{
 			Body:       "Error CreateExcelByte",
 			StatusCode: http.StatusConflict,

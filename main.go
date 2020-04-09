@@ -17,8 +17,8 @@ func main() {
 	)
 
 	if len(os.Getenv("AWS_REGION")) > 0 {
-		sentryDns := os.Getenv("SENTY_DNS")
-		lamdbaLogger, err := logger.NewLamdbaLogger(sentryDns)
+		sentryDNS := os.Getenv("SENTY_DNS")
+		lamdbaLogger, err := logger.NewLamdbaLogger(sentryDNS)
 		if err != nil {
 			panic("SENTY_DNS Not found")
 		}
