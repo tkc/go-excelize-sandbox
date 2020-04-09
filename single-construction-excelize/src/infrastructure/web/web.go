@@ -21,7 +21,7 @@ import (
 )
 
 type httpInfrastructure struct {
-	excelUsecase     usecase.ExcelUsecase
+	excelInteractor  usecase.ExcelInteractor
 	excelParamParser param.ExcelParamParser
 }
 
@@ -30,11 +30,11 @@ type Infrastructure interface {
 }
 
 func NewHTTPInfrastructure(
-	excelUsecase usecase.ExcelUsecase,
+	excelInteractor usecase.ExcelInteractor,
 	excelParamParser param.ExcelParamParser,
 ) Infrastructure {
 	return &httpInfrastructure{
-		excelUsecase:     excelUsecase,
+		excelInteractor:  excelInteractor,
 		excelParamParser: excelParamParser,
 	}
 }
@@ -209,7 +209,7 @@ func (h *httpInfrastructure) Start() {
 			http.Error(w, "Error Decode JSOM param", http.StatusConflict)
 		}
 
-		data, err := h.excelUsecase.CreateExcelByte(*excelRequestType)
+		data, err := h.excelInteractor.CreateExcelByte(*excelRequestType)
 		if err != nil {
 			http.Error(w, "Error Create excel byte", http.StatusConflict)
 		}

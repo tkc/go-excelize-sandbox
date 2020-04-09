@@ -12,7 +12,7 @@ import (
 )
 
 type lamdbaInfrastructure struct {
-	excelUsecase     usecase.ExcelUsecase
+	excelInteractor  usecase.ExcelInteractor
 	excelParamParser param.ExcelParamParser
 	lamdbaLogger     logger.LamdbaLogger
 }
@@ -23,12 +23,12 @@ type Infrastructure interface {
 }
 
 func NewlamdbaInfrastructure(
-	excelUsecase usecase.ExcelUsecase,
+	excelInteractor usecase.ExcelInteractor,
 	excelParamParser param.ExcelParamParser,
 	lamdbaLogger logger.LamdbaLogger,
 ) Infrastructure {
 	return &lamdbaInfrastructure{
-		excelUsecase:     excelUsecase,
+		excelInteractor:  excelInteractor,
 		excelParamParser: excelParamParser,
 		lamdbaLogger:     lamdbaLogger,
 	}
@@ -51,7 +51,7 @@ func (h *lamdbaInfrastructure) handler(request events.APIGatewayProxyRequest) (e
 		}, nil
 	}
 
-	data, err := h.excelUsecase.CreateExcelByte(*excelRequestType)
+	data, err := h.excelInteractor.CreateExcelByte(*excelRequestType)
 	if err != nil {
 		h.lamdbaLogger.Capture(request, err)
 		return events.APIGatewayProxyResponse{

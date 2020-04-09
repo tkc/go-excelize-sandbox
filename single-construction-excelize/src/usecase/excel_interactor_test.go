@@ -11,7 +11,7 @@ import (
 )
 
 func Test_create_excel_byte(t *testing.T) {
-	p := NewExcelUsecase()
+	p := NewExcelInteractor()
 	testDate := time.Now()
 	testid := 1
 

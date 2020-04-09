@@ -12,7 +12,7 @@ import (
 
 func main() {
 	var (
-		excelUsecase     = usecase.NewExcelUsecase()
+		excelInteractor  = usecase.NewExcelInteractor()
 		excelParamParser = param.NewExcelParamParser()
 	)
 
@@ -23,13 +23,13 @@ func main() {
 			panic("SENTY_DNS Not found")
 		}
 		app := lamdba.NewlamdbaInfrastructure(
-			excelUsecase,
+			excelInteractor,
 			excelParamParser,
 			lamdbaLogger,
 		)
 		app.Start()
 	} else {
-		app := web.NewHTTPInfrastructure(excelUsecase, excelParamParser)
+		app := web.NewHTTPInfrastructure(excelInteractor, excelParamParser)
 		app.Start()
 	}
 }

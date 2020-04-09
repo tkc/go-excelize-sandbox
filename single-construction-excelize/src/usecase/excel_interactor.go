@@ -17,19 +17,19 @@ var (
 	weeks     = map[int]int{0: 5, 1: 10, 2: 15, 3: 20, 4: 25, 5: 30, 6: 35}
 )
 
-type ExcelUsecase interface {
+type excelInteractor struct{}
+
+type ExcelInteractor interface {
 	CreateExcelFile(param types.ExcelRequestType) (*excelize.File, error)
 	CreateExcelByte(param types.ExcelRequestType) ([]byte, error)
 	SaveExcelFile(param types.ExcelRequestType) error
 }
 
-type excelUsecase struct{}
-
-func NewExcelUsecase() ExcelUsecase {
-	return &excelUsecase{}
+func NewExcelInteractor() ExcelInteractor {
+	return &excelInteractor{}
 }
 
-func (excelUsecase *excelUsecase) CreateExcelFile(
+func (excelInteractor *excelInteractor) CreateExcelFile(
 	param types.ExcelRequestType,
 ) (*excelize.File, error) {
 	rows := 8
@@ -159,8 +159,8 @@ func (excelUsecase *excelUsecase) CreateExcelFile(
 	return f, nil
 }
 
-func (excelUsecase *excelUsecase) SaveExcelFile(param types.ExcelRequestType) error {
-	f, err := excelUsecase.CreateExcelFile(param)
+func (excelInteractor *excelInteractor) SaveExcelFile(param types.ExcelRequestType) error {
+	f, err := excelInteractor.CreateExcelFile(param)
 	if err != nil {
 		return err
 	}
@@ -172,8 +172,8 @@ func (excelUsecase *excelUsecase) SaveExcelFile(param types.ExcelRequestType) er
 	return nil
 }
 
-func (excelUsecase *excelUsecase) CreateExcelByte(param types.ExcelRequestType) ([]byte, error) {
-	f, err := excelUsecase.CreateExcelFile(param)
+func (excelInteractor *excelInteractor) CreateExcelByte(param types.ExcelRequestType) ([]byte, error) {
+	f, err := excelInteractor.CreateExcelFile(param)
 	if err != nil {
 		return nil, err
 	}
