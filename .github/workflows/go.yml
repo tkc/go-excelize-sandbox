@@ -2,8 +2,7 @@ name: Go
 on: [push]
 
 jobs:
-  single-construction-excelize:
-    name: single-construction-excelize
+  test-single-construction-excelize:
     runs-on: ubuntu-latest
     steps:
     - name: Set up Go 1.13
