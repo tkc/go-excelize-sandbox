@@ -2,7 +2,7 @@ name: Go
 on: [push]
 
 jobs:
-  build:
+  single-construction-excelize:
     name: single-construction-excelize
     runs-on: ubuntu-latest
     steps:
