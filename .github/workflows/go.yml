@@ -3,7 +3,7 @@ on: [push]
 
 jobs:
   build:
-    name: Build
+    name: single-construction-excelize
     runs-on: ubuntu-latest
     steps:
     - name: Set up Go 1.13
@@ -27,12 +27,21 @@ jobs:
         curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.24.0
     - name: Lint
       run: |
+        cd single-construction-excelize
         golangci-lint run
     - name: Test
-      run: go test ./...      
+      run: |
+        cd single-construction-excelize
+        go test ./...      
     - name: Vet
-      run: go vet ./...
+      run: |
+        cd single-construction-excelize
+        go vet ./...
     - name: Build
-      run: go build -v .
+      run: |
+        cd cd single-construction-excelize
+        go build -v .
     - name: Build Lamdba
-      run: GOOS=linux GOARCH=amd64 go build -o aws-sam-go/app ./main.go 
+      run: |
+        cd  cd single-construction-excelize
+        GOOS=linux GOARCH=amd64 go build -o aws-sam-go/app ./main.go 
