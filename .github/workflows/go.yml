@@ -40,9 +40,9 @@ jobs:
         go vet ./...
     - name: Build
       run: |
-        cd cd single-construction-excelize
+        cd single-construction-excelize
         go build -v .
     - name: Build Lamdba
       run: |
-        cd  cd single-construction-excelize
+        cd single-construction-excelize
         GOOS=linux GOARCH=amd64 go build -o aws-sam-go/app ./main.go 
