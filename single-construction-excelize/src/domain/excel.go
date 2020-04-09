@@ -1,4 +1,4 @@
-package model
+package domain
 
 import "time"
 
@@ -12,10 +12,4 @@ type Excel struct {
 	Memo             string
 	Address          string
 	SalesUserName    string
-}
-
-type JoinUser struct {
-	ID        *int
-	UserID    *int
-	CreatedAt *time.Time
 }

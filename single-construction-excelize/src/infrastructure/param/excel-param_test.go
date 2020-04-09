@@ -3,7 +3,7 @@ package param
 import (
 	"testing"
 	"time"
-	"tkc/go-excelize-sandbox/src/domain/model"
+	"tkc/go-excelize-sandbox/src/domain"
 	"tkc/go-excelize-sandbox/src/infrastructure/types"
 
 	"github.com/bxcodec/faker/v3"
@@ -15,7 +15,7 @@ func Test_encode_decode_json(t *testing.T) {
 	excelParamParser := NewExcelParamParser()
 
 	dummyID := 1
-	excel := model.Excel{
+	excel := domain.Excel{
 		UserID:           dummyID,
 		UserName:         faker.Name(),
 		StartedDate:      &fakeDate,
@@ -27,17 +27,17 @@ func Test_encode_decode_json(t *testing.T) {
 		SalesUserName:    faker.Sentence(),
 	}
 
-	joinUser := model.JoinUser{
+	joinUser := domain.JoinUser{
 		ID:        &dummyID,
 		UserID:    &dummyID,
 		CreatedAt: &fakeDate,
 	}
 
-	JoinUsers := []*model.JoinUser{&joinUser}
+	JoinUsers := []*domain.JoinUser{&joinUser}
 
-	excelData := make(map[int]map[int]map[int]*model.Excel)
-	excelData[0] = make(map[int]map[int]*model.Excel)
-	excelData[0][0] = make(map[int]*model.Excel)
+	excelData := make(map[int]map[int]map[int]*domain.Excel)
+	excelData[0] = make(map[int]map[int]*domain.Excel)
+	excelData[0][0] = make(map[int]*domain.Excel)
 	excelData[0][0][0] = &excel
 
 	excelParam := types.ExcelRequestType{

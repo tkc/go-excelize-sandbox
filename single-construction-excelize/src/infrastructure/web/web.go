@@ -11,7 +11,7 @@ import (
 	"net/http"
 	"strconv"
 	"time"
-	"tkc/go-excelize-sandbox/src/domain/model"
+	"tkc/go-excelize-sandbox/src/domain"
 	"tkc/go-excelize-sandbox/src/infrastructure/param"
 	"tkc/go-excelize-sandbox/src/infrastructure/types"
 	"tkc/go-excelize-sandbox/src/usecase"
@@ -44,7 +44,7 @@ func CreateDummyParam() (*string, error) {
 	excelParamParser := param.NewExcelParamParser()
 
 	dummyID := 1
-	excel := model.Excel{
+	excel := domain.Excel{
 		UserID:           dummyID,
 		UserName:         faker.Name(),
 		StartedDate:      &fakeDate,
@@ -56,16 +56,16 @@ func CreateDummyParam() (*string, error) {
 		SalesUserName:    faker.Sentence(),
 	}
 
-	joinUser := model.JoinUser{
+	joinUser := domain.JoinUser{
 		ID:        &dummyID,
 		UserID:    &dummyID,
 		CreatedAt: &fakeDate,
 	}
 
-	JoinUsers := []*model.JoinUser{&joinUser}
-	excelData := make(map[int]map[int]map[int]*model.Excel)
-	excelData[1] = make(map[int]map[int]*model.Excel)
-	excelData[1][0] = make(map[int]*model.Excel)
+	JoinUsers := []*domain.JoinUser{&joinUser}
+	excelData := make(map[int]map[int]map[int]*domain.Excel)
+	excelData[1] = make(map[int]map[int]*domain.Excel)
+	excelData[1][0] = make(map[int]*domain.Excel)
 	excelData[1][0][1] = &excel
 
 	excelParam := types.ExcelRequestType{

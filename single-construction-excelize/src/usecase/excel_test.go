@@ -3,7 +3,7 @@ package usecase
 import (
 	"testing"
 	"time"
-	"tkc/go-excelize-sandbox/src/domain/model"
+	"tkc/go-excelize-sandbox/src/domain"
 	"tkc/go-excelize-sandbox/src/infrastructure/types"
 
 	"github.com/bxcodec/faker/v3"
@@ -15,7 +15,7 @@ func Test_create_excel_byte(t *testing.T) {
 	testDate := time.Now()
 	testid := 1
 
-	excel := model.Excel{
+	excel := domain.Excel{
 		UserID:           testid,
 		UserName:         faker.Name(),
 		StartedDate:      &testDate,
@@ -27,12 +27,12 @@ func Test_create_excel_byte(t *testing.T) {
 		SalesUserName:    faker.Sentence(),
 	}
 
-	excelData := make(map[int]map[int]map[int]*model.Excel)
-	excelData[1] = make(map[int]map[int]*model.Excel)
-	excelData[1][0] = make(map[int]*model.Excel)
+	excelData := make(map[int]map[int]map[int]*domain.Excel)
+	excelData[1] = make(map[int]map[int]*domain.Excel)
+	excelData[1][0] = make(map[int]*domain.Excel)
 	excelData[1][0][1] = &excel
 
-	joinUser := model.JoinUser{
+	joinUser := domain.JoinUser{
 		ID:        &testid,
 		UserID:    &testid,
 		CreatedAt: &testDate,
@@ -43,7 +43,7 @@ func Test_create_excel_byte(t *testing.T) {
 		clientName = faker.Name()
 	)
 
-	JoinUsers := []*model.JoinUser{&joinUser, &joinUser, &joinUser, &joinUser, &joinUser}
+	JoinUsers := []*domain.JoinUser{&joinUser, &joinUser, &joinUser, &joinUser, &joinUser}
 
 	excelParam := types.ExcelRequestType{
 		StartJST:   startJST,
